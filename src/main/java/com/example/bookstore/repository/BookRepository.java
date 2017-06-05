@@ -1,16 +1,21 @@
 package com.example.bookstore.repository;
 
 import com.example.bookstore.model.Book;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface BookRepository {
-    List<Book> findAll();
+public interface BookRepository extends MongoRepository<Book, String> , BookRepositoryCustom {
+  //  List<Book> findAll();
 
     Optional<Book> findById(String id);
 
-    void delete(Book book);
+    @Query("{title : ?0 }")
+    Optional<Book> findUsingQuerry(String title);
 
-    void save(Book book);
+  //  void delete(Book book);
+
+  //  Book save(Book book);
 }

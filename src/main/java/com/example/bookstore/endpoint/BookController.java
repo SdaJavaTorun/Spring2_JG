@@ -35,6 +35,10 @@ public class BookController {
         model.put("listing", bookService.getListingData());
         return "book-listing";
     }
+    @GetMapping("/ajax")
+    public String ajaxListing() {
+        return "ajax-listing";
+    }
 
     @PostMapping()
     public String addBook(@ModelAttribute BookDto bookDto,

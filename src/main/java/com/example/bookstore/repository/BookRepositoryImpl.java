@@ -1,42 +1,26 @@
 package com.example.bookstore.repository;
 
 import com.example.bookstore.model.Book;
-import com.google.common.collect.Lists;
-import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Query;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
 
-@Repository
-public class BookRepositoryImpl implements BookRepository {
-    private List<Book> books = Lists.newArrayList();
-    private AtomicLong lastIndex = new AtomicLong(1);
+import static org.springframework.data.mongodb.core.query.Criteria.where;
 
-    public List<Book> findAll() {
-//        return books; // TODO uncomment BookRepositoryImplTest to check out why it's bad
-        return Collections.unmodifiableList(books);
-    }
+/**
+ * Created by RENT on 2017-06-05.
+ */
+public class BookRepositoryImpl implements BookRepositoryCustom {
+
+    @Autowired
+    private MongoOperations mongoOperations;
 
     @Override
-    public Optional<Book> findById(String id) {
-        return books.stream()
-                .filter(book -> id.equals(book.getId()))
-                .findFirst();
-    }
+    public List<Book> searchSpringBooks() {
+        return mongoOperations.find(
+                Query.query(where("title").is("Spring")), Book.class);
 
-    @Override
-    public void delete(Book book) {
-        books.remove(book);
-    }
-
-    public void save(Book book) {
-        books.add(
-                new Book(
-                        Long.toString(lastIndex.getAndIncrement()),
-                        book.getTitle(),
-                        book.getAuthor())
-        );
     }
 }
